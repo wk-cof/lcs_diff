@@ -40,34 +40,47 @@ void LCS::GetLCS(bool upmost)
   vector<string> longestCommonSubsequence; // parts that are in both str1 and str2 
   vector<string> addedSequences;    // parts of the input that are in str2 and aren't in str1
   vector<string> deletedSequences;  // parts of the input that are in str1 and aren't in str2
-  longestCommonSubsequence.resize(1, m_str1.substr(0, start));
+  string curWord(' ');
+
+  direction currentDirection = m_lcsMatrix[i][j].dir;
+  if (currentDirection == up_and_left)
+    currentDirection = upmost? up : left;
   while (m_lcsMatrix[i][j].len > 0)
   {
     switch (m_lcsMatrix[i][j].dir)
     {
-
       case left:
-        addLeftElement();
+        if (currentDirection == left)
+          deletedSequences[deletedSequences.size()-1].append(m_str1[i]);
+
+//        addLeftElement();
         j --;
         break;
       case up:
-        addUpElement();
+//        addUpElement();
         i--;
         break;
       case upleft:
-        addUpLeftElement();
+        if (currentDirection == upleft)
+          longestCommonSubsequence[longestCommonSubsequence.size()-1].append(m_str1[i]); 
+        else
+        {
+          currentDirection = upleft;
+          longestCommonSubsequence.push_back(m_str1[i]);
+        }
+//        addUpLeftElement();
         i--;
         j--;
         break;
       case up_and_left:
         if (upmost)
         {
-          addUpElement();
+//          addUpElement();
           i--;
         }
         else
         {
-          addLeftElement();
+//          addLeftElement();
           j--;
         }
       case invalid: // this should never happen...
